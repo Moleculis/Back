@@ -1,4 +1,4 @@
-package models.enums;
+package ua.nure.moleculis.models.enums;
 
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;

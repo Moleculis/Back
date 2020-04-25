@@ -1,11 +1,11 @@
-package security;
+package ua.nure.moleculis.security;
 
-import models.entitys.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import repos.UserRepo;
+import ua.nure.moleculis.models.entitys.User;
+import ua.nure.moleculis.repos.UserRepo;
 
 @Service
 public class MyUserDetails implements UserDetailsService {

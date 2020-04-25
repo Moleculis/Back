@@ -1,8 +1,8 @@
-package repos;
+package ua.nure.moleculis.repos;
 
 
-import models.entitys.User;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import ua.nure.moleculis.models.entitys.User;
 
 import javax.transaction.Transactional;
 

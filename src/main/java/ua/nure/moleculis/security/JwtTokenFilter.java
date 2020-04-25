@@ -1,14 +1,14 @@
-package security;
+package ua.nure.moleculis.security;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import exception.CustomException;
-import exception.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import repos.TokenRepo;
+import ua.nure.moleculis.exception.CustomException;
+import ua.nure.moleculis.exception.ErrorResponse;
+import ua.nure.moleculis.repos.TokenRepo;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

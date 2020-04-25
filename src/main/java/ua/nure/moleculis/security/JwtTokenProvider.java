@@ -1,11 +1,9 @@
-package security;
+package ua.nure.moleculis.security;
 
-import exception.CustomException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import models.enums.Role;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import ua.nure.moleculis.exception.CustomException;
+import ua.nure.moleculis.models.enums.Role;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -24,10 +24,10 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${security.jwt.token.secret-key:secret-key}")
+    @Value("${ua.nure.moleculis.security.jwt.token.secret-key:secret-key}")
     private String secretKey;
 
-    @Value("${security.jwt.token.expire-length:604800000}")
+    @Value("${ua.nure.moleculis.security.jwt.token.expire-length:604800000}")
     private long validityInMilliseconds = 604800000; // 7 days
 
     private final MyUserDetails myUserDetails;

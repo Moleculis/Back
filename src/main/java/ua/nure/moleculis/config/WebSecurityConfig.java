@@ -1,4 +1,4 @@
-package config;
+package ua.nure.moleculis.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -12,9 +12,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import repos.TokenRepo;
-import security.JwtTokenFilterConfigurer;
-import security.JwtTokenProvider;
+import ua.nure.moleculis.repos.TokenRepo;
+import ua.nure.moleculis.security.JwtTokenFilterConfigurer;
+import ua.nure.moleculis.security.JwtTokenProvider;
 
 @Configuration
 @EnableWebSecurity
@@ -34,11 +34,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
 
-        // No session will be created or used by spring security
+        // No session will be created or used by spring ua.nure.moleculis.security
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // Entry points
         http.authorizeRequests()
+                .anyRequest().authenticated()
                 .and().httpBasic().and().cors();
 
         http.exceptionHandling().accessDeniedPage("/login");

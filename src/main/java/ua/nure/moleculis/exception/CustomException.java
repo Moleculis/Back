@@ -1,4 +1,4 @@
-package exception;
+package ua.nure.moleculis.exception;
 
 import org.springframework.http.HttpStatus;
 

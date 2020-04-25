@@ -15,7 +15,7 @@
     <description>Moleculis backend</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
@@ -47,7 +47,7 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!--security-->
+        <!--ua.nure.moleculis.security-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>

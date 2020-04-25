@@ -1,12 +1,14 @@
-package models.entitys;
+package ua.nure.moleculis.models.entitys;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import models.enums.PostgreSQLEnumType;
-import models.enums.Role;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import ua.nure.moleculis.models.enums.Gender;
+import ua.nure.moleculis.models.enums.PostgreSQLEnumType;
+import ua.nure.moleculis.models.enums.Role;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -30,8 +32,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false, name = "displayname")
+    private String displayName;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Type(type = "pgsql_enum")
+    private Gender gender;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TokenBlacklist> blacklistTokens = new HashSet<>();
+
+
+    @OneToMany(orphanRemoval = true)
+    private Set<Contact> contacts = new HashSet<>();
 
     @Size(min = 4, max = 30)
     @Column(unique = true, nullable = false)

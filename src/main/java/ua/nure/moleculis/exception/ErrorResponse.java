@@ -1,4 +1,4 @@
-package exception;
+package ua.nure.moleculis.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
