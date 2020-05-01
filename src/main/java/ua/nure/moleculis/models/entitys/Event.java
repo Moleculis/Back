@@ -36,7 +36,10 @@ public class Event {
     private Set<User> users;
 
     public void addUser(User user) {
-        user.addEvent(this);
         users.add(user);
+    }
+
+    public void removeUser(User user) {
+        users.remove(user);
     }
 }

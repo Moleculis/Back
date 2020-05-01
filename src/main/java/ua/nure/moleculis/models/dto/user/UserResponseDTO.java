@@ -10,23 +10,22 @@ import ua.nure.moleculis.models.entitys.User;
 import ua.nure.moleculis.models.enums.Gender;
 import ua.nure.moleculis.models.enums.Role;
 
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class UserUpdateDTO {
+public class UserResponseDTO {
     private String displayname;
     private String fullname;
     private Gender gender;
     private Set<Event> events;
     private Set<User> contacts;
     private String username;
-    private String password;
     private String email;
-    private Set<Role> roles;
+    private List<Role> roles;
     private Set<Group> groups;
     private Set<Group> admin_groups;
-    ;
 }

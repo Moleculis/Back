@@ -13,11 +13,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.WebRequest;
 import ua.nure.moleculis.components.OnRegistrationCompleteEvent;
-import ua.nure.moleculis.components.OnResetPasswordEvent;
 import ua.nure.moleculis.components.Translator;
 import ua.nure.moleculis.exception.CustomException;
-import ua.nure.moleculis.models.dto.user.NewPassDTO;
 import ua.nure.moleculis.models.dto.user.UserUpdateDTO;
+import ua.nure.moleculis.models.entitys.Event;
+import ua.nure.moleculis.models.entitys.Group;
 import ua.nure.moleculis.models.entitys.User;
 import ua.nure.moleculis.models.enums.Gender;
 import ua.nure.moleculis.models.enums.Role;
@@ -28,6 +28,7 @@ import ua.nure.moleculis.security.JwtTokenProvider;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -126,9 +127,68 @@ public class UserService {
             responseMessage = Translator.toLocale("updUserConfEmail");
         }
 
-        String dtoDisplayName = userUpdateDTO.getDisplayName();
-        if (dtoDisplayName != null && !dtoDisplayName.equals(user.getDisplayName())) {
-            user.setDisplayName(dtoDisplayName);
+        Set<Event> dtoEvents = userUpdateDTO.getEvents();
+        Set<Event> events = user.getEvents();
+        if (dtoEvents != null && !dtoEvents.equals(events)) {
+            for (Event event : events) {
+                if (!dtoEvents.contains(event)) {
+                    user.removeEvent(event);
+                }
+            }
+
+
+            for (Event event : dtoEvents) {
+                if (!events.contains(event)) {
+                    user.addEvent(event);
+                }
+            }
+            user.setEvents(events);
+        }
+
+        Set<Group> dtoGroups = userUpdateDTO.getGroups();
+        Set<Group> groups = user.getGroups();
+        if (dtoGroups != null && !dtoGroups.equals(groups)) {
+            for (Group group : groups) {
+                if (!dtoGroups.contains(group)) {
+                    user.removeGroup(group);
+                }
+            }
+
+
+            for (Group group : dtoGroups) {
+                if (!groups.contains(group)) {
+                    user.addGroup(group);
+                }
+            }
+            user.setGroups(groups);
+        }
+
+        Set<Group> dtoAdminGroups = userUpdateDTO.getAdmin_groups();
+        Set<Group> adminGroups = user.getAdmin_groups();
+        if (dtoAdminGroups != null && !dtoAdminGroups.equals(adminGroups)) {
+            for (Group group : adminGroups) {
+                if (!dtoAdminGroups.contains(group)) {
+                    user.removeAdminGroup(group);
+                }
+            }
+
+
+            for (Group group : dtoAdminGroups) {
+                if (!adminGroups.contains(group)) {
+                    user.addAdminGroup(group);
+                }
+            }
+            user.setAdmin_groups(groups);
+        }
+
+        String dtoDisplayName = userUpdateDTO.getDisplayname();
+        if (dtoDisplayName != null && !dtoDisplayName.equals(user.getDisplayname())) {
+            user.setDisplayname(dtoDisplayName);
+        }
+
+        String dtoFullName = userUpdateDTO.getFullname();
+        if (dtoFullName != null && !dtoFullName.equals(user.getFullname())) {
+            user.setFullname(dtoFullName);
         }
         userRepo.save(user);
 
@@ -146,7 +206,7 @@ public class UserService {
         if (user == null) {
             throw new CustomException(Translator.toLocale("noUser"), HttpStatus.NOT_FOUND);
         }
-        List<Role> roles = user.getRoles();
+        Set<Role> roles = user.getRoles();
         if (roles.contains(Role.ROLE_ADMIN)) {
             throw new CustomException(Translator.toLocale("alrAdmin"), HttpStatus.NOT_FOUND);
         }
@@ -190,32 +250,6 @@ public class UserService {
         }
     }
 
-    public String resetPassword(String email, WebRequest request) {
-        if (userRepo.existsByEmail(email)) {
-            User user = userRepo.findUserByEmail(email);
-            String appUrl = request.getContextPath();
-            String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
-            eventPublisher.publishEvent(new OnResetPasswordEvent(user, request.getLocale(), appUrl, token));
-            return Translator.toLocale("resetPassMesSend");
-        } else {
-            throw new CustomException(Translator.toLocale("noUserEmail"), HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-    }
-
-    public String newPass(NewPassDTO passDTO) {
-        if (passDTO == null || passDTO.getPassword1() == null
-                || passDTO.getPassword2() == null || !passDTO.getPassword2().equals(passDTO.getPassword1())) {
-            throw new CustomException(Translator.toLocale("wrongPass"), HttpStatus.BAD_REQUEST);
-        }
-        if (passDTO.getEmail() == null) {
-            throw new CustomException(Translator.toLocale("emailReq"), HttpStatus.BAD_REQUEST);
-        }
-        User user = userRepo.findUserByEmail(passDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(passDTO.getPassword1()));
-        userRepo.save(user);
-        return Translator.toLocale("passChangedSuc");
-    }
-
     public String logout(HttpServletRequest req) {
         User user = currentUser(req);
         String token = jwtTokenProvider.resolveToken(req);
@@ -239,4 +273,5 @@ public class UserService {
             return false;
         }
     }
+
 }

@@ -39,12 +39,18 @@ public class Group {
     private Set<User> admins;
 
     public void addUser(User user) {
-        user.addGroup(this);
         users.add(user);
     }
 
+    public void removeUser(User user) {
+        users.remove(user);
+    }
+
+    public void removeAdmin(User admin) {
+        admins.remove(admin);
+    }
+
     public void addAdmin(User admin) {
-        admin.addAdminGroup(this);
         admins.add(admin);
     }
 }

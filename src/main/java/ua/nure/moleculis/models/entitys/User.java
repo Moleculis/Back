@@ -14,7 +14,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -32,8 +31,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false, name = "displayname")
-    private String displayName;
+    @Column(nullable = false)
+    private String displayname;
+
+    @Column(nullable = false)
+    private String fullname;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -60,14 +62,15 @@ public class User {
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     @ManyToMany(mappedBy = "users")
-    private Set<Group> groups;
+    private Set<Group> groups = new HashSet<>();
+    ;
 
     @ManyToMany(mappedBy = "admins")
-    @Column(name = "admin_groups")
-    private Set<Group> adminGroups;
+    private Set<Group> admin_groups = new HashSet<>();
+    ;
 
     private boolean enabled = false;
 
@@ -84,13 +87,28 @@ public class User {
         events.add(event);
     }
 
+    public void removeEvent(Event event) {
+        event.removeUser(this);
+        events.remove(event);
+    }
+
     public void addGroup(Group group) {
         group.addUser(this);
         groups.add(group);
     }
 
+    public void removeGroup(Group group) {
+        group.removeUser(this);
+        groups.remove(group);
+    }
+
     public void addAdminGroup(Group group) {
         group.addAdmin(this);
-        adminGroups.add(group);
+        admin_groups.add(group);
+    }
+
+    public void removeAdminGroup(Group group) {
+        group.removeAdmin(this);
+        admin_groups.remove(group);
     }
 }
