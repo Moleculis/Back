@@ -34,4 +34,9 @@ public class Event {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "id"))
     private Set<User> users;
+
+    public void addUser(User user) {
+        user.addEvent(this);
+        users.add(user);
+    }
 }

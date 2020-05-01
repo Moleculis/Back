@@ -19,6 +19,7 @@ public class TokenBlacklist {
     private Long id;
 
     private String token;
+
     private LocalDateTime date;
 
     @ManyToOne

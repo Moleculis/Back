@@ -53,6 +53,9 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(unique = true, nullable = false)
+    private String email;
+
     @Size(min = 8)
     private String password;
 
@@ -63,7 +66,10 @@ public class User {
     private Set<Group> groups;
 
     @ManyToMany(mappedBy = "admins")
-    private Set<Group> admin_groups;
+    @Column(name = "admin_groups")
+    private Set<Group> adminGroups;
+
+    private boolean enabled = false;
 
     public void addTokenToBlacklist(String token, LocalDateTime localDateTime) {
         TokenBlacklist tokenBlacklist = new TokenBlacklist();
@@ -71,5 +77,20 @@ public class User {
         tokenBlacklist.setDate(localDateTime);
         tokenBlacklist.setUser(this);
         blacklistTokens.add(tokenBlacklist);
+    }
+
+    public void addEvent(Event event) {
+        event.addUser(this);
+        events.add(event);
+    }
+
+    public void addGroup(Group group) {
+        group.addUser(this);
+        groups.add(group);
+    }
+
+    public void addAdminGroup(Group group) {
+        group.addAdmin(this);
+        adminGroups.add(group);
     }
 }

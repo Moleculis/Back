@@ -37,4 +37,14 @@ public class Group {
             joinColumns = @JoinColumn(name = "admin_id"),
             inverseJoinColumns = @JoinColumn(name = "id"))
     private Set<User> admins;
+
+    public void addUser(User user) {
+        user.addGroup(this);
+        users.add(user);
+    }
+
+    public void addAdmin(User admin) {
+        admin.addAdminGroup(this);
+        admins.add(admin);
+    }
 }
