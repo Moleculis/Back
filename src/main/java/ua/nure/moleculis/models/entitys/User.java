@@ -43,9 +43,11 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TokenBlacklist> blacklistTokens = new HashSet<>();
 
+    @ManyToMany(mappedBy = "users")
+    private Set<Event> events = new HashSet<>();
 
-    @OneToMany(orphanRemoval = true)
-    private Set<Contact> contacts = new HashSet<>();
+    @ManyToMany
+    private Set<User> contacts;
 
     @Size(min = 4, max = 30)
     @Column(unique = true, nullable = false)
@@ -56,6 +58,12 @@ public class User {
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<Role> roles;
+
+    @ManyToMany(mappedBy = "users")
+    private Set<Group> groups;
+
+    @ManyToMany(mappedBy = "admins")
+    private Set<Group> admin_groups;
 
     public void addTokenToBlacklist(String token, LocalDateTime localDateTime) {
         TokenBlacklist tokenBlacklist = new TokenBlacklist();
