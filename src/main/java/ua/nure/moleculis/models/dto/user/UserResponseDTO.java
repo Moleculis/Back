@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ua.nure.moleculis.models.dto.group.GroupDTO;
 import ua.nure.moleculis.models.entitys.Event;
 import ua.nure.moleculis.models.entitys.User;
 import ua.nure.moleculis.models.enums.Gender;

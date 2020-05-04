@@ -2,13 +2,14 @@ package ua.nure.moleculis.services;
 
 import org.springframework.stereotype.Service;
 import ua.nure.moleculis.components.Translator;
-import ua.nure.moleculis.models.dto.user.CreateGroupDTO;
+import ua.nure.moleculis.models.dto.group.CreateGroupDTO;
 import ua.nure.moleculis.models.entitys.Group;
 import ua.nure.moleculis.models.entitys.User;
 import ua.nure.moleculis.repos.GroupRepo;
 import ua.nure.moleculis.repos.UserRepo;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Service
 public class GroupService {
@@ -46,5 +47,9 @@ public class GroupService {
         }
         groupRepo.save(group);
         return Translator.toLocale("groupCreated");
+    }
+
+    public List<Group> getAllGroups() {
+        return groupRepo.findAll();
     }
 }

@@ -1,4 +1,4 @@
-package ua.nure.moleculis.models.dto.user;
+package ua.nure.moleculis.models.dto.group;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
