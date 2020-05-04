@@ -146,4 +146,11 @@ public class UserController {
         String result = contactService.sendContactRequest(req, username);
         return new ResponseEntity<>(new MessageDTO(result), HttpStatus.OK);
     }
+
+    @DeleteMapping(value = "/delete_contact/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    public ResponseEntity<MessageDTO> deleteContactRequest(@PathVariable Long id) {
+        final String result = contactService.deleteContact(id);
+        return new ResponseEntity<>(new MessageDTO(result), HttpStatus.OK);
+    }
 }

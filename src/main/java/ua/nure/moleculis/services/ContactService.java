@@ -45,4 +45,13 @@ public class ContactService {
 
         return Translator.toLocale("contactReqSent");
     }
+
+    public String deleteContact(Long id) {
+        final Contact contact = contactRepo.findContactById(id);
+        if (contact == null) {
+            throw new CustomException(Translator.toLocale("noContact"), HttpStatus.BAD_REQUEST);
+        }
+        contactRepo.delete(contact);
+        return Translator.toLocale("contactRequestCanceled");
+    }
 }

@@ -11,6 +11,7 @@ import ua.nure.moleculis.models.dto.user.UserSmallDTO;
 @Getter
 @Setter
 public class ReceiverContactResponseDTO {
+    private Long id;
     private boolean accepted;
     private UserSmallDTO sender;
 }
