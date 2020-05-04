@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -29,14 +30,14 @@ public class Group {
             name = "group_user",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "id"))
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
             name = "group_admin",
             joinColumns = @JoinColumn(name = "admin_id"),
             inverseJoinColumns = @JoinColumn(name = "id"))
-    private Set<User> admins;
+    private Set<User> admins = new HashSet<>();
 
     public void addUser(User user) {
         users.add(user);
