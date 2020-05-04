@@ -16,6 +16,7 @@ import ua.nure.moleculis.models.dto.user.*;
 import ua.nure.moleculis.models.entitys.User;
 import ua.nure.moleculis.models.enums.SortDirection;
 import ua.nure.moleculis.security.JwtTokenProvider;
+import ua.nure.moleculis.services.ContactService;
 import ua.nure.moleculis.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,13 +28,16 @@ import java.util.stream.Collectors;
 public class UserController {
     private final UserService userService;
 
+    private final ContactService contactService;
+
     private final ModelMapper modelMapper;
 
     private final JwtTokenProvider jwtTokenProvider;
 
 
-    public UserController(UserService userService, ModelMapper modelMapper, JwtTokenProvider jwtTokenProvider) {
+    public UserController(UserService userService, ContactService contactService, ModelMapper modelMapper, JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
+        this.contactService = contactService;
         this.modelMapper = modelMapper;
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -77,7 +81,7 @@ public class UserController {
     }
 
     @GetMapping("/")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<UserResponseDTO>> getUsers() {
         List<UserResponseDTO> userDTOS = userService
                 .getAllUsers()
@@ -133,6 +137,13 @@ public class UserController {
     public ResponseEntity<MessageDTO> updateCurrentUser(@RequestBody UserUpdateDTO userDTO,
                                                         HttpServletRequest req, WebRequest request) {
         String result = userService.updateCurrentUser(req, request, userDTO);
+        return new ResponseEntity<>(new MessageDTO(result), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/send_contact_request/{username}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    public ResponseEntity<MessageDTO> sendContactRequest(@PathVariable String username, HttpServletRequest req) {
+        String result = contactService.sendContactRequest(req, username);
         return new ResponseEntity<>(new MessageDTO(result), HttpStatus.OK);
     }
 }

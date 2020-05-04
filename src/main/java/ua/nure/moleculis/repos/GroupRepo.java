@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface GroupRepo extends PagingAndSortingRepository<Group, Integer> {
     List<Group> findAll();
+
+    Group findGroupById(Long id);
 }

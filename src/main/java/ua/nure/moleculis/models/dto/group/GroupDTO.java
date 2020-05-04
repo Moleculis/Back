@@ -13,6 +13,8 @@ import java.util.Set;
 @Getter
 @Setter
 public class GroupDTO {
+    private Long id;
+
     private String title;
 
     private String description;

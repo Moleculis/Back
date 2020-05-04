@@ -107,7 +107,6 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(newPassword));
         }
 
-
         Gender dtoGender = userUpdateDTO.getGender();
         if (dtoGender != null && !dtoGender.equals(user.getGender())) {
             user.setGender(dtoGender);
@@ -154,7 +153,6 @@ public class UserService {
                 }
             }
 
-
             for (Group group : dtoGroups) {
                 if (!groups.contains(group)) {
                     user.addGroup(group);
@@ -171,7 +169,6 @@ public class UserService {
                     user.removeAdminGroup(group);
                 }
             }
-
 
             for (Group group : dtoAdminGroups) {
                 if (!adminGroups.contains(group)) {
@@ -194,6 +191,7 @@ public class UserService {
 
         return responseMessage;
     }
+
 
     public String verifyUser(User user) {
         user.setEnabled(true);

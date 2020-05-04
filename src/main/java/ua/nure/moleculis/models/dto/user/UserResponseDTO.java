@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ua.nure.moleculis.models.dto.contact.ReceiverContactResponseDTO;
+import ua.nure.moleculis.models.dto.contact.SenderContactResponseDTO;
 import ua.nure.moleculis.models.dto.group.GroupDTO;
 import ua.nure.moleculis.models.entitys.Event;
-import ua.nure.moleculis.models.entitys.User;
 import ua.nure.moleculis.models.enums.Gender;
 import ua.nure.moleculis.models.enums.Role;
 
@@ -22,7 +23,8 @@ public class UserResponseDTO {
     private String fullname;
     private Gender gender;
     private Set<Event> events;
-    private Set<User> contacts;
+    private Set<SenderContactResponseDTO> contacts;
+    private Set<ReceiverContactResponseDTO> contactRequests;
     private String username;
     private String email;
     private List<Role> roles;

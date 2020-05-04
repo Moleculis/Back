@@ -48,8 +48,11 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private Set<Event> events = new HashSet<>();
 
-    @ManyToMany
-    private Set<User> contacts;
+    @OneToMany(mappedBy = "sender")
+    private Set<Contact> contacts = new HashSet<>();
+
+    @OneToMany(mappedBy = "receiver")
+    private Set<Contact> contactRequests = new HashSet<>();
 
     @Size(min = 4, max = 30)
     @Column(unique = true, nullable = false)
@@ -80,6 +83,14 @@ public class User {
         tokenBlacklist.setDate(localDateTime);
         tokenBlacklist.setUser(this);
         blacklistTokens.add(tokenBlacklist);
+    }
+
+    public void addContact(Contact contact) {
+        contacts.add(contact);
+    }
+
+    public void addContactRequest(Contact contact) {
+        contactRequests.add(contact);
     }
 
     public void addEvent(Event event) {
