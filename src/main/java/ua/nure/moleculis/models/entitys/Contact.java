@@ -18,7 +18,7 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private boolean accepted = false;
+    private boolean accepted;
 
     @ManyToOne
     private User sender;

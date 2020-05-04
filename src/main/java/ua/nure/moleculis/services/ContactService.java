@@ -54,4 +54,28 @@ public class ContactService {
         contactRepo.delete(contact);
         return Translator.toLocale("contactRequestCanceled");
     }
+
+    public String acceptContactRequest(Long id, HttpServletRequest req) {
+        final Contact contact = contactRepo.findContactById(id);
+        if (contact == null) {
+            throw new CustomException(Translator.toLocale("noContact"), HttpStatus.BAD_REQUEST);
+        }
+        final User currentUser = userService.currentUser(req);
+        if (contact.getSender().getUsername().equals(currentUser.getUsername())) {
+            throw new CustomException(Translator.toLocale("ownContactAccept"), HttpStatus.BAD_REQUEST);
+        }
+
+        if (!contact.getReceiver().getUsername().equals(currentUser.getUsername())) {
+            throw new CustomException(Translator.toLocale("foreignContact"), HttpStatus.BAD_REQUEST);
+        }
+
+        if (contact.isAccepted()) {
+            throw new CustomException(Translator.toLocale("contactAlreadyAccepted"), HttpStatus.BAD_REQUEST);
+        }
+        contact.setAccepted(true);
+
+        contactRepo.save(contact);
+
+        return Translator.toLocale("contactAccepted");
+    }
 }

@@ -147,6 +147,13 @@ public class UserController {
         return new ResponseEntity<>(new MessageDTO(result), HttpStatus.OK);
     }
 
+    @PostMapping(value = "/accept_contact_request/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    public ResponseEntity<MessageDTO> acceptContactRequest(@PathVariable Long id, HttpServletRequest req) {
+        String result = contactService.acceptContactRequest(id, req);
+        return new ResponseEntity<>(new MessageDTO(result), HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "/delete_contact/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<MessageDTO> deleteContactRequest(@PathVariable Long id) {
