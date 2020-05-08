@@ -89,16 +89,8 @@ public class User {
         contacts.add(contact);
     }
 
-    public void removeContact(Contact contact) {
-        contacts.remove(contact);
-    }
-
     public void addContactRequest(Contact contact) {
         contactRequests.add(contact);
-    }
-
-    public void removeContactRequest(Contact contact) {
-        contactRequests.remove(contact);
     }
 
     public void addEvent(Event event) {

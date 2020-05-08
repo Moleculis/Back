@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -33,7 +34,7 @@ public class Event {
             name = "user_entity_event",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "id"))
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 
     public void addUser(User user) {
         users.add(user);

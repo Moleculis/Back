@@ -192,7 +192,6 @@ public class UserService {
         return responseMessage;
     }
 
-
     public String verifyUser(User user) {
         user.setEnabled(true);
         userRepo.save(user);

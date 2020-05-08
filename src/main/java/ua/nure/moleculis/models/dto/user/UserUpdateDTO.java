@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.nure.moleculis.models.dto.contact.ReceiverContactResponseDTO;
 import ua.nure.moleculis.models.entitys.Event;
 import ua.nure.moleculis.models.entitys.Group;
 import ua.nure.moleculis.models.enums.Gender;
@@ -21,7 +20,7 @@ public class UserUpdateDTO {
     private String fullname;
     private Gender gender;
     private Set<Event> events;
-    private Set<ReceiverContactResponseDTO> contacts;
+    private Set<String> contacts;
     private String username;
     private String password;
     private String email;
