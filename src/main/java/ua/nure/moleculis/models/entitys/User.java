@@ -112,7 +112,6 @@ public class User {
     }
 
     public void addGroup(Group group) {
-        group.addUser(this);
         groups.add(group);
     }
 
@@ -122,7 +121,6 @@ public class User {
     }
 
     public void addAdminGroup(Group group) {
-        group.addAdmin(this);
         admin_groups.add(group);
     }
 

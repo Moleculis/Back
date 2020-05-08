@@ -15,6 +15,7 @@ import ua.nure.moleculis.repos.UserRepo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class GroupService {
@@ -39,16 +40,21 @@ public class GroupService {
 
         group.setDescription(createGroupDTO.getDescription());
 
-        for (String adminUsername : createGroupDTO.getAdmins()) {
-            final User admin = userService.getUser(adminUsername);
-            admin.addAdminGroup(group);
-            userRepo.save(admin);
+        final Set<String> admins = createGroupDTO.getAdmins();
+        if (admins != null) {
+            for (String adminUsername : admins) {
+                final User admin = userService.getUser(adminUsername);
+                admin.addAdminGroup(group);
+                group.addAdmin(admin);
+            }
         }
-
-        for (String username : createGroupDTO.getUsers()) {
-            final User user = userService.getUser(username);
-            user.addGroup(group);
-            userRepo.save(user);
+        final Set<String> users = createGroupDTO.getUsers();
+        if (users != null) {
+            for (String username : users) {
+                final User user = userService.getUser(username);
+                group.addUser(user);
+                user.addGroup(group);
+            }
         }
         groupRepo.save(group);
         return Translator.toLocale("groupCreated");
@@ -79,13 +85,74 @@ public class GroupService {
             group.setDescription(description);
         }
 
+        final Set<User> users = group.getUsers();
+        final Set<String> newUsers = groupDTO.getUsers();
+
+        if (newUsers != null && groupDTO.getAdmins() != null) {
+            for (String user : newUsers) {
+                if (groupDTO.getAdmins().contains(user)) {
+                    throw new CustomException(Translator.toLocale("userAsUserAndAdmin"), HttpStatus.UNPROCESSABLE_ENTITY);
+                }
+            }
+        }
+
+        if (newUsers != null) {
+            for (String user : newUsers) {
+                if (groupContainsUser(group, user)) {
+                    final User u = userRepo.findUserByUsername(user);
+                    group.addUser(u);
+                }
+            }
+
+            for (User user : users) {
+                if (!newUsers.contains(user.getUsername())) {
+                    group.removeUser(user);
+                }
+            }
+        }
+
+        final Set<User> admins = group.getAdmins();
+        final Set<String> newAdmins = groupDTO.getAdmins();
+        if (newAdmins != null) {
+            for (String admin : newAdmins) {
+                if (groupContainsUser(group, admin)) {
+                    final User u = userRepo.findUserByUsername(admin);
+                    group.addAdmin(u);
+                }
+            }
+            for (User admin : admins) {
+                if (!newAdmins.contains(admin.getUsername())) {
+                    group.removeAdmin(admin);
+                }
+            }
+        }
 
         groupRepo.save(group);
-        return "";
+        return Translator.toLocale("groupUpdatedSuccessfully");
+    }
+
+    public String deleteGroup(Long id, HttpServletRequest request) {
+        final User currentUser = userService.currentUser(request);
+        final Group group = groupRepo.findGroupById(id);
+
+        if (!group.getAdmins().contains(currentUser)) {
+            throw new CustomException(Translator.toLocale("userNotAdmin"), HttpStatus.FORBIDDEN);
+        }
+        groupRepo.deleteById(id);
+        return Translator.toLocale("groupDeleted");
     }
 
     private boolean groupContainsAdmin(Group group, String username) {
         for (User user : group.getAdmins()) {
+            if (user.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean groupContainsUser(Group group, String username) {
+        for (User user : group.getUsers()) {
             if (user.getUsername().equals(username)) {
                 return true;
             }

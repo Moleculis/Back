@@ -57,10 +57,17 @@ public class GroupController {
         return new ResponseEntity<>(pageDTO, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{groupId}}")
+    @PutMapping("/{groupId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<MessageDTO> updateGroup(@PathVariable Long groupId, @RequestBody CreateGroupDTO createGroupDTO, HttpServletRequest request) {
         String result = groupService.updateGroup(groupId, createGroupDTO, request);
+        return new ResponseEntity<>(new MessageDTO(result), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{groupId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    public ResponseEntity<MessageDTO> deleteGroup(@PathVariable Long groupId, HttpServletRequest request) {
+        String result = groupService.deleteGroup(groupId, request);
         return new ResponseEntity<>(new MessageDTO(result), HttpStatus.OK);
     }
 }
