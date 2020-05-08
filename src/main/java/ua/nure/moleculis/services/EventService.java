@@ -1,5 +1,8 @@
 package ua.nure.moleculis.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ua.nure.moleculis.components.Translator;
@@ -52,5 +55,10 @@ public class EventService {
         eventRepo.save(event);
 
         return Translator.toLocale("eventCreatedSuccessfully");
+    }
+
+    public Page<Event> getEventsByPage(Integer page) {
+        Pageable pageable = PageRequest.of(page, 20);
+        return eventRepo.findAll(pageable);
     }
 }
