@@ -35,9 +35,20 @@ public class EventController {
 
     @GetMapping("/page/{page}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
-    public ResponseEntity<PageDTO> getEvents(@PathVariable Integer page) {
+    public ResponseEntity<PageDTO> getEvents(@PathVariable Integer page, HttpServletRequest request) {
         Slice<EventResponseDTO> eventDTOs = eventService
-                .getEventsByPage(page)
+                .getEventsByPage(page, request)
+                .map(event -> modelMapper.map(event, EventResponseDTO.class));
+
+        PageDTO pageDTO = modelMapper.map(eventDTOs, PageDTO.class);
+        return new ResponseEntity<>(pageDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("others/page/{page}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    public ResponseEntity<PageDTO> getOthersEvents(@PathVariable Integer page, HttpServletRequest request) {
+        Slice<EventResponseDTO> eventDTOs = eventService
+                .getOthersEventsByPage(page, request)
                 .map(event -> modelMapper.map(event, EventResponseDTO.class));
 
         PageDTO pageDTO = modelMapper.map(eventDTOs, PageDTO.class);

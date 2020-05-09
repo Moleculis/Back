@@ -38,6 +38,9 @@ public class EventService {
 
         event.setTitle(createEventDTO.getTitle());
         event.setDescription(createEventDTO.getDescription());
+
+        event.setPrivate(createEventDTO.isPrivate());
+
         event.setDateCreated(LocalDateTime.now());
         event.setDate(createEventDTO.getDate());
         event.setLocation(createEventDTO.getLocation());
@@ -58,9 +61,19 @@ public class EventService {
         return Translator.toLocale("eventCreatedSuccessfully");
     }
 
-    public Page<Event> getEventsByPage(Integer page) {
+    public Page<Event> getEventsByPage(Integer page, HttpServletRequest request) {
         Pageable pageable = PageRequest.of(page, 20);
-        return eventRepo.findAll(pageable);
+        final User currentUser = userService.currentUser(request);
+
+
+        return eventRepo.findAllByUsersContains(currentUser, pageable);
+    }
+
+    public Page<Event> getOthersEventsByPage(Integer page, HttpServletRequest request) {
+        Pageable pageable = PageRequest.of(page, 20);
+        final User currentUser = userService.currentUser(request);
+
+        return eventRepo.findDistinctByUsersNotContains(currentUser, pageable);
     }
 
     public Event getEvent(Long id) {
@@ -93,6 +106,11 @@ public class EventService {
         if (updateEventDTO.getUsers() != null && !containsUser(updateEventDTO.getUsers(), currentUser)) {
             throw new CustomException(Translator.toLocale("unAuth"), HttpStatus.UNAUTHORIZED);
         }
+
+        if (updateEventDTO.isPrivate() != event.isPrivate()) {
+            event.setPrivate(updateEventDTO.isPrivate());
+        }
+
         final String title = updateEventDTO.getTitle();
         if (title != null && title.length() > 5) {
             event.setTitle(title);

@@ -17,6 +17,8 @@ public class CreateEventDTO {
 
     private String description;
 
+    private boolean isPrivate = true;
+
     private String location;
 
     private LocalDateTime date;

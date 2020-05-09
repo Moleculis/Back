@@ -20,6 +20,8 @@ public class EventResponseDTO {
 
     private String description;
 
+    private boolean isPrivate;
+
     private LocalDateTime date;
 
     private LocalDateTime dateCreated;

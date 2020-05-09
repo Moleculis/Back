@@ -25,6 +25,9 @@ public class Event {
 
     private String description;
 
+    @Column(name = "private")
+    private boolean isPrivate;
+
     private LocalDateTime date;
 
     @Column(name = "date_created")
