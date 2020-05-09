@@ -57,6 +57,13 @@ public class GroupController {
         return new ResponseEntity<>(pageDTO, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{groupId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    public ResponseEntity<GroupDTO> getUser(@PathVariable Long groupId) {
+        final GroupDTO groupDTO = modelMapper.map(groupService.getGroup(groupId), GroupDTO.class);
+        return new ResponseEntity<>(groupDTO, HttpStatus.OK);
+    }
+
     @PutMapping("/{groupId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<MessageDTO> updateGroup(@PathVariable Long groupId, @RequestBody CreateGroupDTO createGroupDTO, HttpServletRequest request) {

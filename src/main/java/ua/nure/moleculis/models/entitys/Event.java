@@ -45,5 +45,6 @@ public class Event {
 
     public void removeUser(User user) {
         users.remove(user);
+        user.removeEvent(this);
     }
 }

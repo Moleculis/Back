@@ -9,6 +9,8 @@ import java.util.List;
 public interface EventRepo extends PagingAndSortingRepository<Event, Integer> {
     List<Event> findAll();
 
+    Event findById(Long id);
+
     @Transactional
     void deleteById(Long id);
 }

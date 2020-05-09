@@ -44,10 +44,31 @@ public class EventController {
         return new ResponseEntity<>(pageDTO, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{eventId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    public ResponseEntity<EventResponseDTO> getUser(@PathVariable Long eventId) {
+        final EventResponseDTO eventResponseDTO = modelMapper.map(eventService.getEvent(eventId), EventResponseDTO.class);
+        return new ResponseEntity<>(eventResponseDTO, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{eventId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<MessageDTO> deleteEvent(@PathVariable Long eventId) {
         String result = eventService.deleteEvent(eventId);
+        return new ResponseEntity<>(new MessageDTO(result), HttpStatus.OK);
+    }
+
+    @PostMapping("/leave/{eventId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    public ResponseEntity<MessageDTO> leaveEvent(@PathVariable Long eventId, HttpServletRequest request) {
+        String message = eventService.leaveEvent(eventId, request);
+        return new ResponseEntity<>(new MessageDTO(message), HttpStatus.OK);
+    }
+
+    @PutMapping("/{eventId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    public ResponseEntity<MessageDTO> updateGroup(@PathVariable Long eventId, @RequestBody CreateEventDTO updateEventDTO, HttpServletRequest request) {
+        String result = eventService.updateEvent(eventId, updateEventDTO, request);
         return new ResponseEntity<>(new MessageDTO(result), HttpStatus.OK);
     }
 }

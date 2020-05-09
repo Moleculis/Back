@@ -63,8 +63,82 @@ public class EventService {
         return eventRepo.findAll(pageable);
     }
 
+    public Event getEvent(Long id) {
+        final Event event = eventRepo.findById(id);
+        if (event == null) {
+            throw new CustomException(Translator.toLocale("noEvent"), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        return event;
+    }
+
+    public String leaveEvent(Long eventId, HttpServletRequest request) {
+        final Event event = eventRepo.findById(eventId);
+        final User user = userService.currentUser(request);
+
+        event.removeUser(user);
+
+        if (event.getUsers().isEmpty()) {
+            return deleteEvent(eventId);
+        }
+
+        eventRepo.save(event);
+
+        return Translator.toLocale("eventLeft");
+    }
+
+    public String updateEvent(Long eventId, CreateEventDTO updateEventDTO, HttpServletRequest request) {
+        final User currentUser = userService.currentUser(request);
+        final Event event = eventRepo.findById(eventId);
+
+        if (updateEventDTO.getUsers() != null && !containsUser(updateEventDTO.getUsers(), currentUser)) {
+            throw new CustomException(Translator.toLocale("unAuth"), HttpStatus.UNAUTHORIZED);
+        }
+        final String title = updateEventDTO.getTitle();
+        if (title != null && title.length() > 5) {
+            event.setTitle(title);
+        }
+        final String description = updateEventDTO.getDescription();
+        if (description != null) {
+            event.setDescription(description);
+        }
+
+        final LocalDateTime date = updateEventDTO.getDate();
+        if (date != null && date.isAfter(LocalDateTime.now())) {
+            event.setDate(date);
+        }
+
+        final String location = updateEventDTO.getLocation();
+        if (location != null && !location.isEmpty()) {
+            event.setLocation(location);
+        }
+
+        final Set<String> users = updateEventDTO.getUsers();
+        if (users != null && !users.isEmpty()) {
+            for (String username : users) {
+                if (!users.contains(username)) {
+                    final User user = userService.getUser(username);
+                    event.addUser(user);
+                    user.addEvent(event);
+                }
+            }
+        }
+
+        eventRepo.save(event);
+
+        return Translator.toLocale("eventUpdatedSuccessfully");
+    }
+
     public String deleteEvent(Long eventId) {
         eventRepo.deleteById(eventId);
         return Translator.toLocale("eventDeleted");
+    }
+
+    private boolean containsUser(Set<String> users, User user) {
+        for (String username : users) {
+            if (user.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

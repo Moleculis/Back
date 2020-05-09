@@ -99,7 +99,6 @@ public class User {
     }
 
     public void removeEvent(Event event) {
-        event.removeUser(this);
         events.remove(event);
     }
 

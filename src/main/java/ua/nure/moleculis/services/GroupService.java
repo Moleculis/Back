@@ -69,6 +69,15 @@ public class GroupService {
         return groupRepo.findAll(pageable);
     }
 
+    public Group getGroup(Long groupId) {
+        final Group group = groupRepo.findGroupById(groupId);
+        if (group == null) {
+            throw new CustomException(Translator.toLocale("noGroup"), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        return group;
+    }
+
     public String updateGroup(Long groupId, CreateGroupDTO groupDTO, HttpServletRequest request) {
         final Group group = groupRepo.findGroupById(groupId);
         final User currentUser = userService.currentUser(request);
