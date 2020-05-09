@@ -22,6 +22,8 @@ public class EventResponseDTO {
 
     private LocalDateTime date;
 
+    private LocalDateTime dateCreated;
+
     private String location;
 
     private Set<UserSmallDTO> users;

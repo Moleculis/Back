@@ -32,13 +32,14 @@ public class EventService {
 
         final Event event = new Event();
 
-        if (createEventDTO.getTitle() == null || createEventDTO.getUsers() == null) {
+        if (createEventDTO.getTitle() == null || createEventDTO.getDate() == null || createEventDTO.getUsers() == null) {
             throw new CustomException(Translator.toLocale("wrongEventModel"), HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
         event.setTitle(createEventDTO.getTitle());
         event.setDescription(createEventDTO.getDescription());
-        event.setDate(LocalDateTime.now());
+        event.setDateCreated(LocalDateTime.now());
+        event.setDate(createEventDTO.getDate());
         event.setLocation(createEventDTO.getLocation());
 
         event.addUser(currentUser);
@@ -60,5 +61,10 @@ public class EventService {
     public Page<Event> getEventsByPage(Integer page) {
         Pageable pageable = PageRequest.of(page, 20);
         return eventRepo.findAll(pageable);
+    }
+
+    public String deleteEvent(Long eventId) {
+        eventRepo.deleteById(eventId);
+        return Translator.toLocale("eventDeleted");
     }
 }

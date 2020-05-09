@@ -43,4 +43,11 @@ public class EventController {
         PageDTO pageDTO = modelMapper.map(eventDTOs, PageDTO.class);
         return new ResponseEntity<>(pageDTO, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{eventId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<MessageDTO> deleteEvent(@PathVariable Long eventId) {
+        String result = eventService.deleteEvent(eventId);
+        return new ResponseEntity<>(new MessageDTO(result), HttpStatus.OK);
+    }
 }

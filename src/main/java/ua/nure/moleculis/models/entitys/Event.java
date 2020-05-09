@@ -27,6 +27,9 @@ public class Event {
 
     private LocalDateTime date;
 
+    @Column(name = "date_created")
+    private LocalDateTime dateCreated;
+
     private String location;
 
     @ManyToMany
