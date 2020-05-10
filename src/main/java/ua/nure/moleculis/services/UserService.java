@@ -27,6 +27,7 @@ import ua.nure.moleculis.security.JwtTokenProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -237,6 +238,9 @@ public class UserService {
                 throw new CustomException(Translator.toLocale("longUsername"), HttpStatus.UNPROCESSABLE_ENTITY);
             }
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            final Set<Role> roles = new HashSet<>();
+            roles.add(Role.ROLE_CLIENT);
+            user.setRoles(roles);
             userRepo.save(user);
             String appUrl = request.getContextPath();
             String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());

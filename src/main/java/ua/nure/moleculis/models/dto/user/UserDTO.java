@@ -6,9 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ua.nure.moleculis.models.enums.Gender;
-import ua.nure.moleculis.models.enums.Role;
-
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,5 +18,4 @@ public class UserDTO {
     private String username;
     private String email;
     private String password;
-    private Set<Role> roles;
 }
