@@ -63,7 +63,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{eventId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<MessageDTO> deleteEvent(@PathVariable Long eventId) {
         String result = eventService.deleteEvent(eventId);
         return new ResponseEntity<>(new MessageDTO(result), HttpStatus.OK);

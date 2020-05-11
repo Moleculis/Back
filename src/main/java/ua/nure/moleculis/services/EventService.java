@@ -133,10 +133,16 @@ public class EventService {
         final Set<String> users = updateEventDTO.getUsers();
         if (users != null && !users.isEmpty()) {
             for (String username : users) {
-                if (!users.contains(username)) {
+                if (!containsUsername(event.getUsers(), username)) {
                     final User user = userService.getUser(username);
                     event.addUser(user);
                     user.addEvent(event);
+                }
+            }
+            for (User user : event.getUsers()) {
+                if (!users.contains(user.getUsername())) {
+                    event.removeUser(user);
+                    user.removeEvent(event);
                 }
             }
         }
@@ -149,6 +155,15 @@ public class EventService {
     public String deleteEvent(Long eventId) {
         eventRepo.deleteById(eventId);
         return Translator.toLocale("eventDeleted");
+    }
+
+    private boolean containsUsername(Set<User> users, String username) {
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean containsUser(Set<String> users, User user) {

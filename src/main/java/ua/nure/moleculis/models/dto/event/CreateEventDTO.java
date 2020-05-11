@@ -17,7 +17,7 @@ public class CreateEventDTO {
 
     private String description;
 
-    private boolean isPrivate = true;
+    private boolean isPrivate = false;
 
     private String location;
 
