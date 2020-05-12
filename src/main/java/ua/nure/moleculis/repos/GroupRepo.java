@@ -14,6 +14,8 @@ public interface GroupRepo extends PagingAndSortingRepository<Group, Integer> {
 
     Page<Group> findAllByUsersContainsOrAdminsContains(User user, User admin, Pageable pageable);
 
+    Page<Group> findAllByUsersNotContainingAndAdminsNotContaining(User user, User admin, Pageable pageable);
+
     Group findGroupById(Long id);
 
     @Transactional

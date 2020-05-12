@@ -57,6 +57,17 @@ public class GroupController {
         return new ResponseEntity<>(pageDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/other/page/{page}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    public ResponseEntity<PageDTO> getOtherGroups(@PathVariable Integer page, HttpServletRequest request) {
+        Slice<GroupDTO> groupDTOs = groupService
+                .getOtherGroupsByPage(page, request)
+                .map(group -> modelMapper.map(group, GroupDTO.class));
+
+        PageDTO pageDTO = modelMapper.map(groupDTOs, PageDTO.class);
+        return new ResponseEntity<>(pageDTO, HttpStatus.OK);
+    }
+
     @GetMapping(value = "/{groupId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<GroupDTO> getUser(@PathVariable Long groupId) {

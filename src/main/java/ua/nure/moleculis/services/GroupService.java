@@ -70,6 +70,12 @@ public class GroupService {
         return groupRepo.findAllByUsersContainsOrAdminsContains(currentUser, currentUser, pageable);
     }
 
+    public Page<Group> getOtherGroupsByPage(Integer page, HttpServletRequest request) {
+        Pageable pageable = PageRequest.of(page, 20);
+        final User currentUser = userService.currentUser(request);
+        return groupRepo.findAllByUsersNotContainingAndAdminsNotContaining(currentUser, currentUser, pageable);
+    }
+
     public Group getGroup(Long groupId) {
         final Group group = groupRepo.findGroupById(groupId);
         if (group == null) {
