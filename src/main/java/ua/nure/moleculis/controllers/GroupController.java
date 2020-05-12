@@ -48,9 +48,9 @@ public class GroupController {
 
     @GetMapping("/page/{page}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
-    public ResponseEntity<PageDTO> getGroups(@PathVariable Integer page) {
+    public ResponseEntity<PageDTO> getGroups(@PathVariable Integer page, HttpServletRequest request) {
         Slice<GroupDTO> groupDTOs = groupService
-                .getGroupsByPage(page)
+                .getGroupsByPage(page, request)
                 .map(group -> modelMapper.map(group, GroupDTO.class));
 
         PageDTO pageDTO = modelMapper.map(groupDTOs, PageDTO.class);

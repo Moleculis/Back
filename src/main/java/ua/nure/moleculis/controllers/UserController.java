@@ -81,7 +81,7 @@ public class UserController {
     }
 
     @GetMapping("/")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<List<UserResponseDTO>> getUsers() {
         List<UserResponseDTO> userDTOS = userService
                 .getAllUsers()
