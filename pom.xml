@@ -10,7 +10,7 @@
     </parent>
     <groupId>ua.nure</groupId>
     <artifactId>moleculis</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Moleculis</name>
     <description>Moleculis backend</description>
 
