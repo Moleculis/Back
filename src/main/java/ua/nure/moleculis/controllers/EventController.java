@@ -25,7 +25,6 @@ public class EventController {
         this.eventService = eventService;
         this.modelMapper = modelMapper;
     }
-
     @PostMapping("/")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<MessageDTO> createEvent(@RequestBody CreateEventDTO createEventDTO, HttpServletRequest request) {

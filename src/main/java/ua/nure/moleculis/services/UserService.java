@@ -27,9 +27,7 @@ import ua.nure.moleculis.security.JwtTokenProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -50,6 +48,23 @@ public class UserService {
         this.jwtTokenProvider = jwtTokenProvider;
         this.authenticationManager = authenticationManager;
         this.eventPublisher = eventPublisher;
+    }
+
+    public List<User> getUsersNearby() {
+        Random random = new Random();
+        List<Long> ids = new ArrayList<>(Arrays.asList(4L, 5L, 38L));
+        final int count = random.nextInt(3);
+        List<User> users = new ArrayList<>();
+        for (int i = 0; i < count; ++i) {
+            final int index = random.nextInt(ids.size());
+            final Long id = ids.get(index);
+            final User usr = userRepo.findUserById(id);
+            if (usr != null) {
+                users.add(usr);
+                ids.remove(id);
+            }
+        }
+        return users;
     }
 
     public List<User> getAllUsers() {

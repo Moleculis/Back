@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 public class UserSmallDTO {
+    private Long id;
     private String displayname;
     private String fullname;
     private String username;

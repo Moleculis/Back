@@ -10,6 +10,7 @@ import ua.nure.moleculis.repos.ContactRepo;
 import ua.nure.moleculis.repos.UserRepo;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Service
 public class ContactService {
@@ -43,6 +44,22 @@ public class ContactService {
         contact.addContactRequest(newContact);
         userRepo.save(contact);
 
+        return Translator.toLocale("contactReqSent");
+    }
+
+    public String sendContactRequests(HttpServletRequest request, List<String> usernames) {
+        final User currentUser = userService.currentUser(request);
+        for (Contact contact : currentUser.getContacts()) {
+            final String contactUsername = contact.getReceiver().getUsername();
+            usernames.remove(contactUsername);
+        }
+        for (Contact contact : currentUser.getContactRequests()) {
+            final String contactUsername = contact.getSender().getUsername();
+            usernames.remove(contactUsername);
+        }
+        for (String username : usernames) {
+            sendContactRequest(request, username);
+        }
         return Translator.toLocale("contactReqSent");
     }
 

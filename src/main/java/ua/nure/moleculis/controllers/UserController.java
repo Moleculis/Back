@@ -80,6 +80,19 @@ public class UserController {
         return new ResponseEntity<>(new BooleanDTO(userService.isResetPassTokenValid(token)), HttpStatus.OK);
     }
 
+    @GetMapping("/nearby")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    public ResponseEntity<PeopleNearbyDTO> getUsersNearby() {
+        List<UserSmallDTO> userDTOS = userService
+                .getUsersNearby()
+                .stream()
+                .map(user -> modelMapper.map(user, UserSmallDTO.class))
+                .collect(Collectors.toList());
+        final PeopleNearbyDTO peopleNearbyDTO = new PeopleNearbyDTO();
+        peopleNearbyDTO.setUsers(userDTOS);
+        return new ResponseEntity<>(peopleNearbyDTO, HttpStatus.OK);
+    }
+
     @GetMapping("/")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<List<UserResponseDTO>> getUsers() {
@@ -144,6 +157,13 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<MessageDTO> sendContactRequest(@PathVariable String username, HttpServletRequest req) {
         String result = contactService.sendContactRequest(req, username);
+        return new ResponseEntity<>(new MessageDTO(result), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/send_contact_requests")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    public ResponseEntity<MessageDTO> sendContactRequests(@RequestBody SendConnectionRequestsDTO requestsDTO, HttpServletRequest req) {
+        String result = contactService.sendContactRequests(req, requestsDTO.getUsernames());
         return new ResponseEntity<>(new MessageDTO(result), HttpStatus.OK);
     }
 
