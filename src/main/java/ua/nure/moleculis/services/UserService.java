@@ -16,6 +16,7 @@ import ua.nure.moleculis.components.OnRegistrationCompleteEvent;
 import ua.nure.moleculis.components.Translator;
 import ua.nure.moleculis.exception.CustomException;
 import ua.nure.moleculis.models.dto.user.UserUpdateDTO;
+import ua.nure.moleculis.models.entitys.Contact;
 import ua.nure.moleculis.models.entitys.Event;
 import ua.nure.moleculis.models.entitys.Group;
 import ua.nure.moleculis.models.entitys.User;
@@ -52,7 +53,7 @@ public class UserService {
 
     public List<User> getUsersNearby() {
         Random random = new Random();
-        List<Long> ids = new ArrayList<>(Arrays.asList(4L, 5L, 38L));
+        List<Long> ids = new ArrayList<>(Arrays.asList(7L, 8L, 9L, 10L));
         final int count = random.nextInt(3);
         List<User> users = new ArrayList<>();
         for (int i = 0; i < count; ++i) {
@@ -71,8 +72,32 @@ public class UserService {
         return userRepo.findAll();
     }
 
+    public List<User> getAllOtherUsers(HttpServletRequest req) {
+        final User currentUser = currentUser(req);
+        final List<String> usernames = new ArrayList<>();
+        usernames.add(currentUser.getUsername());
+
+        for (Contact contact : currentUser.getContacts()) {
+            if (!contact.getReceiver().getUsername().equals(currentUser.getUsername())) {
+                usernames.add(contact.getReceiver().getUsername());
+            } else {
+                usernames.add(contact.getSender().getUsername());
+            }
+        }
+
+        for (Contact contact : currentUser.getContactRequests()) {
+            if (!contact.getReceiver().getUsername().equals(currentUser.getUsername())) {
+                usernames.add(contact.getReceiver().getUsername());
+            } else {
+                usernames.add(contact.getSender().getUsername());
+            }
+        }
+
+        return userRepo.findAllByUsernameIsNotIn(usernames);
+    }
+
     public Page<User> getUsersByPage(Integer page, String userOrderBy, SortDirection sortDirection) {
-        Pageable pageable = getPageableWithSort(page, userOrderBy, sortDirection);
+        final Pageable pageable = getPageableWithSort(page, userOrderBy, sortDirection);
         return userRepo.findAll(pageable);
     }
 
@@ -289,5 +314,4 @@ public class UserService {
             return false;
         }
     }
-
 }

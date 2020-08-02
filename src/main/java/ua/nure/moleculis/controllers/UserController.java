@@ -104,6 +104,17 @@ public class UserController {
         return new ResponseEntity<>(userDTOS, HttpStatus.OK);
     }
 
+    @GetMapping("/other")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    public ResponseEntity<List<UserResponseDTO>> getOtherUsers(HttpServletRequest req) {
+        List<UserResponseDTO> userDTOS = userService
+                .getAllOtherUsers(req)
+                .stream()
+                .map(user -> modelMapper.map(user, UserResponseDTO.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(userDTOS, HttpStatus.OK);
+    }
+
     @GetMapping("/page/{page}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<PageDTO> getUsers(@PathVariable Integer page,

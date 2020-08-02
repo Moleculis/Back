@@ -19,5 +19,7 @@ public interface UserRepo extends PagingAndSortingRepository<User, Integer> {
 
     List<User> findAll();
 
+    List<User> findAllByUsernameIsNotIn(List<String> usernames);
+
     User findUserById(Long id);
 }
