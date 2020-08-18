@@ -74,10 +74,7 @@ public class UserController {
     @GetMapping("/registrationConfirm")
     public ResponseEntity<MessageDTO> confirmRegistration
             (@RequestParam("token") String token) {
-        String username = jwtTokenProvider.getUsername(token);
-
-        User user = userService.getUser(username);
-        String message = userService.verifyUser(user);
+        String message = userService.verifyUser(token);
         return new ResponseEntity<>(new MessageDTO(message), HttpStatus.OK);
     }
 
@@ -90,7 +87,7 @@ public class UserController {
 
     @GetMapping("/tokenValid")
     public ResponseEntity<BooleanDTO> confirmResetPasswordToken(@RequestParam("token") String token) {
-        return new ResponseEntity<>(new BooleanDTO(userService.isResetPassTokenValid(token)), HttpStatus.OK);
+        return new ResponseEntity<>(new BooleanDTO(userService.isTokenValid(token)), HttpStatus.OK);
     }
 
     @GetMapping("/nearby")

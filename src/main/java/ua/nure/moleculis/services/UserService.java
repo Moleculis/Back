@@ -231,13 +231,22 @@ public class UserService {
         return responseMessage;
     }
 
-    public String verifyUser(User user) {
+    public String verifyUser(String token) {
+        String username = jwtTokenProvider.getUsername(token);
+        User user = getUser(username);
+        if (user.isEnabled()) {
+            return Translator.toLocale("userEnabled");
+        }
+        user.addTokenToBlacklist(token, LocalDateTime.now());
         user.setEnabled(true);
         userRepo.save(user);
         return Translator.toLocale("emailConfSuc");
     }
 
     public String resetPassword(String token, String password) {
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new CustomException(Translator.toLocale("wrongJWT"), HttpStatus.FORBIDDEN);
+        }
         final String username = jwtTokenProvider.getUsername(token);
         final User user = getUser(username);
         user.setPassword(passwordEncoder.encode(password));
@@ -325,11 +334,11 @@ public class UserService {
         return userRepo.findUserByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
     }
 
-    public Boolean isResetPassTokenValid(String token) {
+    public Boolean isTokenValid(String token) {
         try {
             final User user = userRepo.findUserByUsername(jwtTokenProvider.getUsername(token));
-            for(TokenBlacklist tokenBlacklist : user.getBlacklistTokens()){
-                if(tokenBlacklist.getToken().equals(token)){
+            for (TokenBlacklist tokenBlacklist : user.getBlacklistTokens()) {
+                if (tokenBlacklist.getToken().equals(token)) {
                     return false;
                 }
             }
