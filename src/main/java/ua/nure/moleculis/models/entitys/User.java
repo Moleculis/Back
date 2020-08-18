@@ -69,11 +69,9 @@ public class User {
 
     @ManyToMany(mappedBy = "users")
     private Set<Group> groups = new HashSet<>();
-    ;
 
     @ManyToMany(mappedBy = "admins")
     private Set<Group> admin_groups = new HashSet<>();
-    ;
 
     private boolean enabled = false;
 

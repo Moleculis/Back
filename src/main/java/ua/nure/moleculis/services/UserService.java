@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.WebRequest;
 import ua.nure.moleculis.components.OnRegistrationCompleteEvent;
+import ua.nure.moleculis.components.OnResetPasswordEvent;
 import ua.nure.moleculis.components.Translator;
 import ua.nure.moleculis.exception.CustomException;
 import ua.nure.moleculis.models.dto.user.UserUpdateDTO;
@@ -239,6 +240,12 @@ public class UserService {
         return Translator.toLocale("emailConfSuc");
     }
 
+    public String changePassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepo.save(user);
+        return Translator.toLocale("resetPassSuccess");
+    }
+
     public String grantAdminPrivileges(String username) {
         User user = userRepo.findUserByUsername(username);
         if (user == null) {
@@ -289,6 +296,17 @@ public class UserService {
         } else {
             throw new CustomException(Translator.toLocale("usernameExists"), HttpStatus.UNPROCESSABLE_ENTITY);
         }
+    }
+
+    public String resetPass(String email, WebRequest request) {
+        final User user = userRepo.findUserByEmail(email);
+        if (user == null) {
+            throw new CustomException(Translator.toLocale("noUser"), HttpStatus.NOT_FOUND);
+        }
+        String appUrl = request.getContextPath();
+        String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+        eventPublisher.publishEvent(new OnResetPasswordEvent(user, request.getLocale(), appUrl, token));
+        return Translator.toLocale("resetPassMailSent");
     }
 
     public String logout(HttpServletRequest req) {

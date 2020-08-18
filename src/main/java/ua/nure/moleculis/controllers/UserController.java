@@ -58,6 +58,12 @@ public class UserController {
         return new ResponseEntity<>(new MessageDTO(message), HttpStatus.OK);
     }
 
+    @PostMapping("/resetPass")
+    public ResponseEntity<MessageDTO> resetPass(@RequestParam("email") String email, WebRequest request) {
+        final String message = userService.resetPass(email, request);
+        return new ResponseEntity<>(new MessageDTO(message), HttpStatus.OK);
+    }
+
     @PostMapping("/logout")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public ResponseEntity<MessageDTO> logout(HttpServletRequest req) {
@@ -75,8 +81,18 @@ public class UserController {
         return new ResponseEntity<>(new MessageDTO(message), HttpStatus.OK);
     }
 
+    @PostMapping("/resetPassConfirm")
+    public ResponseEntity<MessageDTO> confirmPasswordReset
+            (@RequestBody ResetPassDTO resetPassDTO) {
+        final String username = jwtTokenProvider.getUsername(resetPassDTO.getToken());
+
+        final User user = userService.getUser(username);
+        final String message = userService.changePassword(user, resetPassDTO.getPassword());
+        return new ResponseEntity<>(new MessageDTO(message), HttpStatus.OK);
+    }
+
     @GetMapping("/tokenValid")
-    public ResponseEntity<BooleanDTO> confirmResetPasswordToke(@RequestParam("token") String token) {
+    public ResponseEntity<BooleanDTO> confirmResetPasswordToken(@RequestParam("token") String token) {
         return new ResponseEntity<>(new BooleanDTO(userService.isResetPassTokenValid(token)), HttpStatus.OK);
     }
 

@@ -11,12 +11,9 @@ import ua.nure.moleculis.services.UserService;
 public class UserRegistrationListener implements
         ApplicationListener<OnRegistrationCompleteEvent> {
 
-    private final UserService service;
-
     private final JavaMailSender mailSender;
 
-    public UserRegistrationListener(UserService service, JavaMailSender mailSender) {
-        this.service = service;
+    public UserRegistrationListener(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 

@@ -47,6 +47,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/register").permitAll()
                 .antMatchers("/users/registrationConfirm").permitAll()
                 .antMatchers("/users/tokenValid").permitAll()
+                .antMatchers("/users/resetPass").permitAll()
+                .antMatchers("/users/resetPassConfirm").permitAll()
                 .anyRequest().authenticated()
                 .and().httpBasic().and().cors();
 
