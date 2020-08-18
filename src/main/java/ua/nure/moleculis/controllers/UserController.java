@@ -60,7 +60,7 @@ public class UserController {
 
     @PostMapping("/resetPass")
     public ResponseEntity<MessageDTO> resetPass(@RequestParam("email") String email, WebRequest request) {
-        final String message = userService.resetPass(email, request);
+        final String message = userService.sendResetPassEmail(email, request);
         return new ResponseEntity<>(new MessageDTO(message), HttpStatus.OK);
     }
 
@@ -84,10 +84,7 @@ public class UserController {
     @PostMapping("/resetPassConfirm")
     public ResponseEntity<MessageDTO> confirmPasswordReset
             (@RequestBody ResetPassDTO resetPassDTO) {
-        final String username = jwtTokenProvider.getUsername(resetPassDTO.getToken());
-
-        final User user = userService.getUser(username);
-        final String message = userService.changePassword(user, resetPassDTO.getPassword());
+        final String message = userService.resetPassword(resetPassDTO.getToken(), resetPassDTO.getPassword());
         return new ResponseEntity<>(new MessageDTO(message), HttpStatus.OK);
     }
 

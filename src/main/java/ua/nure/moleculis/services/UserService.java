@@ -17,10 +17,7 @@ import ua.nure.moleculis.components.OnResetPasswordEvent;
 import ua.nure.moleculis.components.Translator;
 import ua.nure.moleculis.exception.CustomException;
 import ua.nure.moleculis.models.dto.user.UserUpdateDTO;
-import ua.nure.moleculis.models.entitys.Contact;
-import ua.nure.moleculis.models.entitys.Event;
-import ua.nure.moleculis.models.entitys.Group;
-import ua.nure.moleculis.models.entitys.User;
+import ua.nure.moleculis.models.entitys.*;
 import ua.nure.moleculis.models.enums.Gender;
 import ua.nure.moleculis.models.enums.Role;
 import ua.nure.moleculis.models.enums.SortDirection;
@@ -240,8 +237,11 @@ public class UserService {
         return Translator.toLocale("emailConfSuc");
     }
 
-    public String changePassword(User user, String password) {
+    public String resetPassword(String token, String password) {
+        final String username = jwtTokenProvider.getUsername(token);
+        final User user = getUser(username);
         user.setPassword(passwordEncoder.encode(password));
+        user.addTokenToBlacklist(token, LocalDateTime.now());
         userRepo.save(user);
         return Translator.toLocale("resetPassSuccess");
     }
@@ -298,7 +298,7 @@ public class UserService {
         }
     }
 
-    public String resetPass(String email, WebRequest request) {
+    public String sendResetPassEmail(String email, WebRequest request) {
         final User user = userRepo.findUserByEmail(email);
         if (user == null) {
             throw new CustomException(Translator.toLocale("noUser"), HttpStatus.NOT_FOUND);
@@ -327,6 +327,12 @@ public class UserService {
 
     public Boolean isResetPassTokenValid(String token) {
         try {
+            final User user = userRepo.findUserByUsername(jwtTokenProvider.getUsername(token));
+            for(TokenBlacklist tokenBlacklist : user.getBlacklistTokens()){
+                if(tokenBlacklist.getToken().equals(token)){
+                    return false;
+                }
+            }
             return jwtTokenProvider.validateToken(token);
         } catch (Exception e) {
             return false;
