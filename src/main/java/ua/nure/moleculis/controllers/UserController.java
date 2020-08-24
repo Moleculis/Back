@@ -32,14 +32,11 @@ public class UserController {
 
     private final ModelMapper modelMapper;
 
-    private final JwtTokenProvider jwtTokenProvider;
 
-
-    public UserController(UserService userService, ContactService contactService, ModelMapper modelMapper, JwtTokenProvider jwtTokenProvider) {
+    public UserController(UserService userService, ContactService contactService, ModelMapper modelMapper) {
         this.userService = userService;
         this.contactService = contactService;
         this.modelMapper = modelMapper;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping("/login")
