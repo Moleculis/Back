@@ -280,31 +280,33 @@ public class UserService {
     }
 
     public String register(User user, WebRequest request) {
-        if (!userRepo.existsByUsername(user.getUsername())) {
-            if (user.getPassword() == null) {
-                throw new CustomException(Translator.toLocale("noPass"), HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-            if (user.getPassword().length() < 8) {
-                throw new CustomException(Translator.toLocale("shortPass"), HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-            if (user.getUsername().length() < 4) {
-                throw new CustomException(Translator.toLocale("shortUsername"), HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-            if (user.getUsername().length() > 30) {
-                throw new CustomException(Translator.toLocale("longUsername"), HttpStatus.UNPROCESSABLE_ENTITY);
-            }
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            final Set<Role> roles = new HashSet<>();
-            roles.add(Role.ROLE_CLIENT);
-            user.setRoles(roles);
-            userRepo.save(user);
-            String appUrl = request.getContextPath();
-            String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
-            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), appUrl, token));
-            return Translator.toLocale("userRegistered");
-        } else {
+        if (userRepo.existsByUsername(user.getUsername())) {
             throw new CustomException(Translator.toLocale("usernameExists"), HttpStatus.UNPROCESSABLE_ENTITY);
         }
+        if(userRepo.existsByEmail(user.getEmail())){
+            throw new CustomException(Translator.toLocale("emailExists"), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        if (user.getPassword() == null) {
+            throw new CustomException(Translator.toLocale("noPass"), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        if (user.getPassword().length() < 8) {
+            throw new CustomException(Translator.toLocale("shortPass"), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        if (user.getUsername().length() < 4) {
+            throw new CustomException(Translator.toLocale("shortUsername"), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        if (user.getUsername().length() > 30) {
+            throw new CustomException(Translator.toLocale("longUsername"), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        final Set<Role> roles = new HashSet<>();
+        roles.add(Role.ROLE_CLIENT);
+        user.setRoles(roles);
+        userRepo.save(user);
+        String appUrl = request.getContextPath();
+        String token = jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, request.getLocale(), appUrl, token));
+        return Translator.toLocale("userRegistered");
     }
 
     public String sendResetPassEmail(String email, WebRequest request) {
