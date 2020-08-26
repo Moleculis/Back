@@ -1,0 +1,508 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.3
+-- Dumped by pg_dump version 12.3
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+ALTER TABLE ONLY public.contact_entity DROP CONSTRAINT fksm80nglvu22944hvt9heduqe1;
+ALTER TABLE ONLY public.group_admin DROP CONSTRAINT fks846qel5x56rdfgglwy0w30om;
+ALTER TABLE ONLY public.user_entity_contacts DROP CONSTRAINT fkraxh76r880jgn6sfkq7cf8y6u;
+ALTER TABLE ONLY public.group_admin DROP CONSTRAINT fkn3yybd23autxc2m4ayh5gv7p5;
+ALTER TABLE ONLY public.user_entity_event DROP CONSTRAINT fkl1niev4g4sqf7c08iwia92h38;
+ALTER TABLE ONLY public.user_entity_contacts DROP CONSTRAINT fkjp0x2dndefsck9c74yx6wmpsr;
+ALTER TABLE ONLY public.contact_entity DROP CONSTRAINT fke3neid54axsilgm6lenmlvc5e;
+ALTER TABLE ONLY public.group_user DROP CONSTRAINT fkab9avuigqal9jtmrghwch02jw;
+ALTER TABLE ONLY public.user_entity_event DROP CONSTRAINT fk9p13qqm7lxue7g0yy8g8yfkl9;
+ALTER TABLE ONLY public.group_user DROP CONSTRAINT fk87eg2b7qrteyud625p5d3d3no;
+ALTER TABLE ONLY public.user_roles DROP CONSTRAINT fk6y02653x6ebhsu2plf21ard62;
+ALTER TABLE ONLY public.token_blacklist DROP CONSTRAINT fk32f68egf19iuhqycb9bkbh5at;
+ALTER TABLE ONLY public.user_entity DROP CONSTRAINT user_entity_pkey;
+ALTER TABLE ONLY public.user_entity_event DROP CONSTRAINT user_entity_event_pkey;
+ALTER TABLE ONLY public.user_entity_contacts DROP CONSTRAINT user_entity_contacts_pkey;
+ALTER TABLE ONLY public.user_entity DROP CONSTRAINT uk_4xad1enskw4j1t2866f7sodrx;
+ALTER TABLE ONLY public.user_entity DROP CONSTRAINT uk_2jsk4eakd0rmvybo409wgwxuw;
+ALTER TABLE ONLY public.token_blacklist DROP CONSTRAINT token_blacklist_pkey;
+ALTER TABLE ONLY public.group_user DROP CONSTRAINT group_user_pkey;
+ALTER TABLE ONLY public.group_entity DROP CONSTRAINT group_entity_pkey;
+ALTER TABLE ONLY public.group_admin DROP CONSTRAINT group_admin_pkey;
+ALTER TABLE ONLY public.event DROP CONSTRAINT event_pkey;
+ALTER TABLE ONLY public.contact_entity DROP CONSTRAINT contact_entity_pkey;
+DROP TABLE public.user_roles;
+DROP TABLE public.user_entity_event;
+DROP TABLE public.user_entity_contacts;
+DROP TABLE public.user_entity;
+DROP TABLE public.token_blacklist;
+DROP SEQUENCE public.hibernate_sequence;
+DROP TABLE public.group_user;
+DROP TABLE public.group_entity;
+DROP TABLE public.group_admin;
+DROP TABLE public.event;
+DROP TABLE public.contact_entity;
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: contact_entity; Type: TABLE; Schema: public; Owner: eugene
+--
+
+CREATE TABLE public.contact_entity (
+    id bigint NOT NULL,
+    accepted boolean NOT NULL,
+    receiver_id bigint,
+    sender_id bigint
+);
+
+
+ALTER TABLE public.contact_entity OWNER TO eugene;
+
+--
+-- Name: event; Type: TABLE; Schema: public; Owner: eugene
+--
+
+CREATE TABLE public.event (
+    id bigint NOT NULL,
+    date timestamp without time zone,
+    description character varying(255),
+    location character varying(255),
+    title character varying(255),
+    date_created timestamp without time zone,
+    private boolean
+);
+
+
+ALTER TABLE public.event OWNER TO eugene;
+
+--
+-- Name: group_admin; Type: TABLE; Schema: public; Owner: eugene
+--
+
+CREATE TABLE public.group_admin (
+    admin_id bigint NOT NULL,
+    id bigint NOT NULL
+);
+
+
+ALTER TABLE public.group_admin OWNER TO eugene;
+
+--
+-- Name: group_entity; Type: TABLE; Schema: public; Owner: eugene
+--
+
+CREATE TABLE public.group_entity (
+    id bigint NOT NULL,
+    description character varying(255),
+    title character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.group_entity OWNER TO eugene;
+
+--
+-- Name: group_user; Type: TABLE; Schema: public; Owner: eugene
+--
+
+CREATE TABLE public.group_user (
+    user_id bigint NOT NULL,
+    id bigint NOT NULL
+);
+
+
+ALTER TABLE public.group_user OWNER TO eugene;
+
+--
+-- Name: hibernate_sequence; Type: SEQUENCE; Schema: public; Owner: eugene
+--
+
+CREATE SEQUENCE public.hibernate_sequence
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.hibernate_sequence OWNER TO eugene;
+
+--
+-- Name: token_blacklist; Type: TABLE; Schema: public; Owner: eugene
+--
+
+CREATE TABLE public.token_blacklist (
+    id bigint NOT NULL,
+    date timestamp without time zone,
+    token character varying(255),
+    user_id bigint
+);
+
+
+ALTER TABLE public.token_blacklist OWNER TO eugene;
+
+--
+-- Name: user_entity; Type: TABLE; Schema: public; Owner: eugene
+--
+
+CREATE TABLE public.user_entity (
+    id bigint NOT NULL,
+    displayname character varying(255) NOT NULL,
+    email character varying(255) NOT NULL,
+    enabled boolean NOT NULL,
+    fullname character varying(255) NOT NULL,
+    gender character varying(255) NOT NULL,
+    password character varying(255),
+    username character varying(30) NOT NULL,
+    reset_token character varying(255)
+);
+
+
+ALTER TABLE public.user_entity OWNER TO eugene;
+
+--
+-- Name: user_entity_contacts; Type: TABLE; Schema: public; Owner: eugene
+--
+
+CREATE TABLE public.user_entity_contacts (
+    user_id bigint NOT NULL,
+    contacts_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.user_entity_contacts OWNER TO eugene;
+
+--
+-- Name: user_entity_event; Type: TABLE; Schema: public; Owner: eugene
+--
+
+CREATE TABLE public.user_entity_event (
+    user_id bigint NOT NULL,
+    id bigint NOT NULL
+);
+
+
+ALTER TABLE public.user_entity_event OWNER TO eugene;
+
+--
+-- Name: user_roles; Type: TABLE; Schema: public; Owner: eugene
+--
+
+CREATE TABLE public.user_roles (
+    user_id bigint NOT NULL,
+    roles integer
+);
+
+
+ALTER TABLE public.user_roles OWNER TO eugene;
+
+--
+-- Data for Name: contact_entity; Type: TABLE DATA; Schema: public; Owner: eugene
+--
+
+COPY public.contact_entity (id, accepted, receiver_id, sender_id) FROM stdin;
+12	f	5	7
+13	t	5	10
+15	f	9	5
+\.
+
+
+--
+-- Data for Name: event; Type: TABLE DATA; Schema: public; Owner: eugene
+--
+
+COPY public.event (id, date, description, location, title, date_created, private) FROM stdin;
+17	2020-09-17 12:00:00	Gaming stream on the twitch channel	twitch/...	Gaming stream	2020-08-03 18:42:16.226	f
+\.
+
+
+--
+-- Data for Name: group_admin; Type: TABLE DATA; Schema: public; Owner: eugene
+--
+
+COPY public.group_admin (admin_id, id) FROM stdin;
+18	9
+18	5
+19	9
+\.
+
+
+--
+-- Data for Name: group_entity; Type: TABLE DATA; Schema: public; Owner: eugene
+--
+
+COPY public.group_entity (id, description, title) FROM stdin;
+18	Group for stalker fans	Stalker fans
+19	Some group	Test group
+\.
+
+
+--
+-- Data for Name: group_user; Type: TABLE DATA; Schema: public; Owner: eugene
+--
+
+COPY public.group_user (user_id, id) FROM stdin;
+18	8
+18	10
+19	7
+19	10
+\.
+
+
+--
+-- Data for Name: token_blacklist; Type: TABLE DATA; Schema: public; Owner: eugene
+--
+
+COPY public.token_blacklist (id, date, token, user_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: user_entity; Type: TABLE DATA; Schema: public; Owner: eugene
+--
+
+COPY public.user_entity (id, displayname, email, enabled, fullname, gender, password, username, reset_token) FROM stdin;
+7	Raider	yevhen.ostashko@nure.ua	t	Jack Black	MALE	$2a$12$S8z.txyU0SlFCYzgv8xbZuKPiks.wYFeBPwJc4gaYDHh380Stw85K	raider	\N
+8	Stranger	ostashko400@gmail.com	t	Jhone Brown	MALE	$2a$12$NXUT69sgxvUA7Sr/72OQy.O4qIzh9ES3lf9WW88U1WS57SPMnfO5i	stranger	\N
+9	Saber	ostashko40@gmail.com	t	Осташко Марина Васильевна	MALE	$2a$12$7J0WdXwHub0SMR6Q28Z8ROzl0m.3OCRm7VwAxQRQytj8yrmcAJCMK	saber	\N
+10	Archer	jsports.team@gmail.com	t	Danny Renson	MALE	$2a$12$SMglu4CKXFfLv.UKX70dOegSZ6LCbg9qzDz9CbIZl/puCLpb37g/O	archer	\N
+5	ACupOfTea	ostashko4@gmail.com	t	Осташко Євген Васильович	MALE	$2a$12$qgaaaFEM6fqAWerSOwYfKevw8.4imuO/2mt6/HiiMphlx1H5bTKfe	stalker	\N
+\.
+
+
+--
+-- Data for Name: user_entity_contacts; Type: TABLE DATA; Schema: public; Owner: eugene
+--
+
+COPY public.user_entity_contacts (user_id, contacts_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: user_entity_event; Type: TABLE DATA; Schema: public; Owner: eugene
+--
+
+COPY public.user_entity_event (user_id, id) FROM stdin;
+17	9
+17	8
+17	10
+\.
+
+
+--
+-- Data for Name: user_roles; Type: TABLE DATA; Schema: public; Owner: eugene
+--
+
+COPY public.user_roles (user_id, roles) FROM stdin;
+5	0
+7	1
+8	1
+9	1
+10	1
+\.
+
+
+--
+-- Name: hibernate_sequence; Type: SEQUENCE SET; Schema: public; Owner: eugene
+--
+
+SELECT pg_catalog.setval('public.hibernate_sequence', 61, true);
+
+
+--
+-- Name: contact_entity contact_entity_pkey; Type: CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.contact_entity
+    ADD CONSTRAINT contact_entity_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: event event_pkey; Type: CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.event
+    ADD CONSTRAINT event_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: group_admin group_admin_pkey; Type: CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.group_admin
+    ADD CONSTRAINT group_admin_pkey PRIMARY KEY (admin_id, id);
+
+
+--
+-- Name: group_entity group_entity_pkey; Type: CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.group_entity
+    ADD CONSTRAINT group_entity_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: group_user group_user_pkey; Type: CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.group_user
+    ADD CONSTRAINT group_user_pkey PRIMARY KEY (user_id, id);
+
+
+--
+-- Name: token_blacklist token_blacklist_pkey; Type: CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.token_blacklist
+    ADD CONSTRAINT token_blacklist_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_entity uk_2jsk4eakd0rmvybo409wgwxuw; Type: CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.user_entity
+    ADD CONSTRAINT uk_2jsk4eakd0rmvybo409wgwxuw UNIQUE (username);
+
+
+--
+-- Name: user_entity uk_4xad1enskw4j1t2866f7sodrx; Type: CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.user_entity
+    ADD CONSTRAINT uk_4xad1enskw4j1t2866f7sodrx UNIQUE (email);
+
+
+--
+-- Name: user_entity_contacts user_entity_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.user_entity_contacts
+    ADD CONSTRAINT user_entity_contacts_pkey PRIMARY KEY (user_id, contacts_id);
+
+
+--
+-- Name: user_entity_event user_entity_event_pkey; Type: CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.user_entity_event
+    ADD CONSTRAINT user_entity_event_pkey PRIMARY KEY (user_id, id);
+
+
+--
+-- Name: user_entity user_entity_pkey; Type: CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.user_entity
+    ADD CONSTRAINT user_entity_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: token_blacklist fk32f68egf19iuhqycb9bkbh5at; Type: FK CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.token_blacklist
+    ADD CONSTRAINT fk32f68egf19iuhqycb9bkbh5at FOREIGN KEY (user_id) REFERENCES public.user_entity(id);
+
+
+--
+-- Name: user_roles fk6y02653x6ebhsu2plf21ard62; Type: FK CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.user_roles
+    ADD CONSTRAINT fk6y02653x6ebhsu2plf21ard62 FOREIGN KEY (user_id) REFERENCES public.user_entity(id);
+
+
+--
+-- Name: group_user fk87eg2b7qrteyud625p5d3d3no; Type: FK CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.group_user
+    ADD CONSTRAINT fk87eg2b7qrteyud625p5d3d3no FOREIGN KEY (id) REFERENCES public.user_entity(id);
+
+
+--
+-- Name: user_entity_event fk9p13qqm7lxue7g0yy8g8yfkl9; Type: FK CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.user_entity_event
+    ADD CONSTRAINT fk9p13qqm7lxue7g0yy8g8yfkl9 FOREIGN KEY (user_id) REFERENCES public.event(id);
+
+
+--
+-- Name: group_user fkab9avuigqal9jtmrghwch02jw; Type: FK CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.group_user
+    ADD CONSTRAINT fkab9avuigqal9jtmrghwch02jw FOREIGN KEY (user_id) REFERENCES public.group_entity(id);
+
+
+--
+-- Name: contact_entity fke3neid54axsilgm6lenmlvc5e; Type: FK CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.contact_entity
+    ADD CONSTRAINT fke3neid54axsilgm6lenmlvc5e FOREIGN KEY (receiver_id) REFERENCES public.user_entity(id);
+
+
+--
+-- Name: user_entity_contacts fkjp0x2dndefsck9c74yx6wmpsr; Type: FK CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.user_entity_contacts
+    ADD CONSTRAINT fkjp0x2dndefsck9c74yx6wmpsr FOREIGN KEY (contacts_id) REFERENCES public.user_entity(id);
+
+
+--
+-- Name: user_entity_event fkl1niev4g4sqf7c08iwia92h38; Type: FK CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.user_entity_event
+    ADD CONSTRAINT fkl1niev4g4sqf7c08iwia92h38 FOREIGN KEY (id) REFERENCES public.user_entity(id);
+
+
+--
+-- Name: group_admin fkn3yybd23autxc2m4ayh5gv7p5; Type: FK CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.group_admin
+    ADD CONSTRAINT fkn3yybd23autxc2m4ayh5gv7p5 FOREIGN KEY (admin_id) REFERENCES public.group_entity(id);
+
+
+--
+-- Name: user_entity_contacts fkraxh76r880jgn6sfkq7cf8y6u; Type: FK CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.user_entity_contacts
+    ADD CONSTRAINT fkraxh76r880jgn6sfkq7cf8y6u FOREIGN KEY (user_id) REFERENCES public.user_entity(id);
+
+
+--
+-- Name: group_admin fks846qel5x56rdfgglwy0w30om; Type: FK CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.group_admin
+    ADD CONSTRAINT fks846qel5x56rdfgglwy0w30om FOREIGN KEY (id) REFERENCES public.user_entity(id);
+
+
+--
+-- Name: contact_entity fksm80nglvu22944hvt9heduqe1; Type: FK CONSTRAINT; Schema: public; Owner: eugene
+--
+
+ALTER TABLE ONLY public.contact_entity
+    ADD CONSTRAINT fksm80nglvu22944hvt9heduqe1 FOREIGN KEY (sender_id) REFERENCES public.user_entity(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
