@@ -30,7 +30,7 @@ public class AdministrationService {
 
     public String createDatabaseBackup(HttpServletRequest request) {
         checkIfUserIsAdmin(request);
-        final String date = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss").format(new Date());
+        final String date = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss").format(new Date());
         final String backupFileName = backupFilesPath + "backup_" + dbName.toLowerCase() + "_" + date + ".bak";
         try {
             final String[] createBackupCommand = new String[]{"pg_dump", dbName, "-h",
