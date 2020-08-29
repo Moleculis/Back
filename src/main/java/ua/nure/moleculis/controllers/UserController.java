@@ -89,9 +89,9 @@ public class UserController {
 
     @GetMapping("/nearby")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
-    public ResponseEntity<PeopleNearbyDTO> getUsersNearby() {
+    public ResponseEntity<PeopleNearbyDTO> getUsersNearby(HttpServletRequest req) {
         List<UserSmallDTO> userDTOS = userService
-                .getUsersNearby()
+                .getUsersNearby(req)
                 .stream()
                 .map(user -> modelMapper.map(user, UserSmallDTO.class))
                 .collect(Collectors.toList());

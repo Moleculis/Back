@@ -49,18 +49,22 @@ public class UserService {
         this.eventPublisher = eventPublisher;
     }
 
-    public List<User> getUsersNearby() {
-        Random random = new Random();
-        List<Long> ids = new ArrayList<>(Arrays.asList(7L, 8L, 9L, 10L));
-        final int count = random.nextInt(3);
+    public List<User> getUsersNearby(HttpServletRequest req) {
+        final List<User> otherUsers = getAllOtherUsers(req);
+        final Random random = new Random();
+        List<Long> otherUsersIds = new ArrayList<>();
+        for(User user : otherUsers){
+            otherUsersIds.add(user.getId());
+        }
+        final int count = random.nextInt(otherUsersIds.size());
         List<User> users = new ArrayList<>();
         for (int i = 0; i < count; ++i) {
-            final int index = random.nextInt(ids.size());
-            final Long id = ids.get(index);
+            final int index = random.nextInt(otherUsersIds.size() - 1);
+            final Long id = otherUsersIds.get(index);
             final User usr = userRepo.findUserById(id);
             if (usr != null) {
                 users.add(usr);
-                ids.remove(id);
+                otherUsersIds.remove(id);
             }
         }
         return users;
