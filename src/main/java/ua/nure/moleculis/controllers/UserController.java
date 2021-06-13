@@ -15,7 +15,6 @@ import ua.nure.moleculis.models.dto.PageDTO;
 import ua.nure.moleculis.models.dto.user.*;
 import ua.nure.moleculis.models.entitys.User;
 import ua.nure.moleculis.models.enums.SortDirection;
-import ua.nure.moleculis.security.JwtTokenProvider;
 import ua.nure.moleculis.services.ContactService;
 import ua.nure.moleculis.services.UserService;
 
@@ -50,8 +49,8 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<MessageDTO> register(@RequestBody UserDTO userDTO, WebRequest request) {
-        User user = modelMapper.map(userDTO, User.class);
-        String message = userService.register(user, request);
+        final User user = modelMapper.map(userDTO, User.class);
+        final String message = userService.register(user, request);
         return new ResponseEntity<>(new MessageDTO(message), HttpStatus.OK);
     }
 

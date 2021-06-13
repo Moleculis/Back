@@ -28,7 +28,7 @@ public class ResetPasswordListener implements
         final String recipientAddress = user.getEmail();
         final String subject = Translator.toLocale("passwordReset");
         final String confirmationUrl
-                = "http://localhost:3000/reset-pass?token=" + token;
+                = "https://moleculis-24e8a.web.app/reset-pass?token=" + token;
         final String message = Translator.toLocale("resetPassMes");
 
         SimpleMailMessage email = new SimpleMailMessage();

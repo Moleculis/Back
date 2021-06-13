@@ -29,7 +29,7 @@ public class UserRegistrationListener implements
         String recipientAddress = user.getEmail();
         String subject = "Registration Confirmation";
         String confirmationUrl
-                = "http://localhost:3000/registration-confirm?token=" + token;
+                = "https://moleculis-24e8a.web.app/registration-confirm?token=" + token;
         String message = Translator.toLocale("emailConfMes");
 
         SimpleMailMessage email = new SimpleMailMessage();
